@@ -10,7 +10,7 @@ namespace HotelProject.BL.Model
         public int Id { get { return _id; } set { if (value <= 0) throw new CustomerException("invalid id"); _id = value; } }
         private ContactInfo _contactInfo;
         public ContactInfo ContactInfo { get { return _contactInfo; } set { if (value == null) throw new CustomerException("contactinfo null"); _contactInfo = value; } }
-        private List<Member> _members=new List<Member>();
+        private List<Member> _members=new ();
 
         public Customer(string name, int id, ContactInfo contactInfo)
         {

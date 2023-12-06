@@ -29,5 +29,7 @@ namespace HotelProject.BL.Managers
                 throw new CustomerManagerException("GetAllCustomer",ex);
             }
         }
+
+        public 
     }
 }

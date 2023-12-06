@@ -1,4 +1,5 @@
-﻿using HotelProject.BL.Model;
+﻿using HotelProject.BL.Managers;
+using HotelProject.BL.Model;
 using HotelProject.UI.CustomerWPF.Model;
 using System;
 using System.Collections.Generic;
@@ -46,14 +47,15 @@ namespace HotelProject.UI.CustomerWPF
                 customerUI.Email = EmailTextBox.Text;
                 customerUI.Phone = PhoneTextBox.Text;
                 //TODO customermanager.Update()
+                //customerManager.UpdateCustomer(customerUI);
             }
             else
             {
-                Customer c = new Customer(NameTextBox.Text, new ContactInfo(EmailTextBox.Text, PhoneTextBox.Text, new Address(CityTextBox.Text, ZipTextBox.Text, HouseNumberTextBox.Text, StreetTextBox.Text)));
+                Customer c = new (NameTextBox.Text, new ContactInfo(EmailTextBox.Text, PhoneTextBox.Text, new Address(CityTextBox.Text, ZipTextBox.Text, HouseNumberTextBox.Text, StreetTextBox.Text)));
                 //write customer
                 c.Id = 100;
                 //TODO id from DB
-                customerUI = new CustomerUI(c.Id, c.Name, c.ContactInfo.Email, c.ContactInfo.Phone, c.ContactInfo.Address.ToString(), c.GetMembers().Count);
+                customerUI = new (c.Id, c.Name, c.ContactInfo.Email, c.ContactInfo.Phone, c.ContactInfo.Address.ToString(), c.GetMembers().Count);
             }
             DialogResult = true;
             Close();

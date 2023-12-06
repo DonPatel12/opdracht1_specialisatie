@@ -28,7 +28,7 @@ namespace HotelProject.UI.CustomerWPF
     public partial class MainWindow : Window
     {
         private CustomerManager customerManager;
-        private ObservableCollection<CustomerUI> customersUIs=new ObservableCollection<CustomerUI>();
+        private ObservableCollection<CustomerUI> customersUIs=new ();
         public MainWindow()
         {
             InitializeComponent();
@@ -44,7 +44,7 @@ namespace HotelProject.UI.CustomerWPF
 
         private void MenuItemAddCustomer_Click(object sender, RoutedEventArgs e)
         {
-            CustomerWindow w = new CustomerWindow(false,null);
+            CustomerWindow w = new (false,null);
             if (w.ShowDialog()==true)
                 customersUIs.Add(w.customerUI);
         }
@@ -59,7 +59,7 @@ namespace HotelProject.UI.CustomerWPF
             if (CustomerDataGrid.SelectedItem == null) MessageBox.Show("Customer not selected","Update");
             else
             {
-                CustomerWindow w = new CustomerWindow(true,(CustomerUI)CustomerDataGrid.SelectedItem);
+                CustomerWindow w = new (true,(CustomerUI)CustomerDataGrid.SelectedItem);
                 w.ShowDialog();
             }
         }

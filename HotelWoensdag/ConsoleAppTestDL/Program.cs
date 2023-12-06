@@ -9,11 +9,11 @@ namespace ConsoleAppTestDL
         {
             Console.WriteLine("Hello, World!");
             string connectionString = "Data Source=DONPATEL\\SQLEXPRESS;Initial Catalog=HotelWoensdag;Integrated Security=True";
-            CustomerRepositoryADO repo = new CustomerRepositoryADO(connectionString);
+            CustomerRepositoryADO repo = new (connectionString);
             //var x=repo.GetCustomers("jo");
-            Customer customer = new Customer("Fred", new ContactInfo("fred@gmail","0123456789",new Address("gent","9000","12f","kerkstraat")));
-            customer.AddMember(new Member("Freddy", DateOnly.FromDateTime(DateTime.Parse("1989-8-8"))));
-            customer.AddMember(new Member("Gino", DateOnly.FromDateTime(DateTime.Parse("1987-5-8"))));
+            Customer customer = new ("Fred", new ContactInfo("fred@gmail","0123456789",new Address("gent","9000","12f","kerkstraat")));
+            customer.AddMember(new ("Freddy", new DateOnly(1989,8,8)));
+            customer.AddMember(new ("Gino", new DateOnly(1987,5,8)));
             repo.AddCustomer(customer);
 
         }
