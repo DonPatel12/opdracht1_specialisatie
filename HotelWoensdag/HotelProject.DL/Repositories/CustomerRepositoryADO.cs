@@ -3,6 +3,7 @@ using HotelProject.BL.Model;
 using HotelProject.DL.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -51,7 +52,7 @@ namespace HotelProject.DL.Repositories
                             }
                             if (!reader.IsDBNull(reader.GetOrdinal("membername")))
                             {
-                                customers[id].AddMember(new Member((string)reader["membername"], DateOnly.FromDateTime((DateTime)reader["birthday"])));
+                                customers[id].AddMember(new Member((string)reader["membername"], ((DateTime)reader["birthday"])));
                             }                            
                         }
                     return customers.Values.ToList();
@@ -91,7 +92,7 @@ namespace HotelProject.DL.Repositories
                         {
                             cmd.Parameters.Clear();
                             cmd.Parameters.AddWithValue("@name",member.Name);
-                            cmd.Parameters.AddWithValue("@birthday", member.BirthDay.ToDateTime(TimeOnly.MinValue));
+                            cmd.Parameters.AddWithValue("@birthday", member.BirthDay);
                             cmd.Parameters.AddWithValue("@customerid", id);
                             cmd.Parameters.AddWithValue("@status", 1);
                             cmd.ExecuteNonQuery();
@@ -108,6 +109,100 @@ namespace HotelProject.DL.Repositories
             {
                 throw new CustomerRepositoryException("AddCustomer", ex);
             }
+        }
+
+        public void DeleteCustomer(Customer customer)
+        {
+            string sql = "UPDATE Customer SET status=@status WHERE id=@id";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                try
+                {
+                    conn.Open();
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@id", customer.Id);
+                    cmd.Parameters.AddWithValue("@status", 0);
+                    cmd.ExecuteNonQuery();
+
+                    sql = "UPDATE Members SET status=@status WHERE customerId=@customerId";
+                    cmd.CommandText = sql;
+                    foreach (Member member in customer.GetMembers())
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@customerId", customer.Id);
+                        cmd.Parameters.AddWithValue("@status", 0);
+                        cmd.ExecuteNonQuery();
+                    }
+                } catch (Exception ex)
+                {
+                    throw new CustomerRepositoryException("UpdateCustomer", ex);
+                }
+            }
+        }
+
+        public Customer GetCustomerById(int id)
+        {
+            string sql = "SELECT * FROM Customer WHERE id=@id";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                try
+                {
+                    conn.Open();
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@id", id);
+                    IDataReader dr = cmd.ExecuteReader();
+                    dr.Read();
+                    Customer c = new Customer((string)dr["name"], (int)dr["id"], new ContactInfo((string)dr["email"], (string)dr["phone"], new Address((string)dr["address"])));
+                    dr.Close();
+                    return c;
+                } catch (Exception ex)
+                {
+                    throw new CustomerRepositoryException("GetCustomerById", ex);
+                }
+            }
+        }
+
+        public void UpdateCustomer(Customer customer)
+        {
+            string sql = "UPDATE Customer SET name=@name, email=@email, phone=@phone WHERE id=@id";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                try
+                {
+                    conn.Open();
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@id", customer.Id);
+                    cmd.Parameters.AddWithValue("@name", customer.Name);
+                    cmd.Parameters.AddWithValue("@email", customer.ContactInfo.Email);
+                    cmd.Parameters.AddWithValue("@phone", customer.ContactInfo.Phone);
+                    cmd.ExecuteNonQuery();
+                } catch (Exception ex)
+                {
+                    throw new CustomerRepositoryException("UpdateCustomer", ex);
+                }
+            }
+        }
+
+        public bool CustomerExists(int id)
+        {
+            bool exists = false;
+
+            string sql = "SELECT COUNT(*) FROM Customer WHERE id = @id";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("@id", id);
+                int count = (int)cmd.ExecuteScalar();
+
+                exists = count > 0;
+            }
+
+            return exists;
         }
     }
 }

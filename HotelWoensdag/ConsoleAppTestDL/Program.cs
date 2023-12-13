@@ -12,8 +12,8 @@ namespace ConsoleAppTestDL
             CustomerRepositoryADO repo = new (connectionString);
             //var x=repo.GetCustomers("jo");
             Customer customer = new ("Fred", new ContactInfo("fred@gmail","0123456789",new Address("gent","9000","12f","kerkstraat")));
-            customer.AddMember(new ("Freddy", new DateOnly(1989,8,8)));
-            customer.AddMember(new ("Gino", new DateOnly(1987,5,8)));
+            //customer.AddMember(new ("Freddy", new DateOnly(1989,8,8)));
+            //customer.AddMember(new ("Gino", new DateOnly(1987,5,8)));
             repo.AddCustomer(customer);
 
         }

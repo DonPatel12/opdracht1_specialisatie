@@ -9,15 +9,18 @@ namespace HotelProject.BL.Model
 {
     public class Member
     {
-        public Member(string name, DateOnly birthDay)
+        public Member(string name, DateTime birthDay)
         {
             Name = name;
             BirthDay = birthDay;
         }
+        protected static List<Member> _members = new List<Member>();
+
         private string _name;
+
         public string Name { get { return _name; } set { if (string.IsNullOrWhiteSpace(value)) throw new MemberException("name is empty"); _name = value; } }
-        private DateOnly _birthDay;
-        public DateOnly BirthDay { get { return _birthDay; } set { if (value>DateOnly.FromDateTime(DateTime.Now)) throw new MemberException("birthday invalid"); _birthDay = value; } }
+        private DateTime _birthDay;
+        public DateTime BirthDay { get { return _birthDay; } set { if (value>DateTime.Now) throw new MemberException("birthday invalid"); _birthDay = value; } }
 
         public override bool Equals(object? obj)
         {
@@ -29,6 +32,16 @@ namespace HotelProject.BL.Model
         public override int GetHashCode()
         {
             return HashCode.Combine(_name, _birthDay);
+        }
+
+        public static void AddMember(Member member)
+        {
+            _members.Add(member);
+        }
+
+        public static List<Member> GetMembers()
+        {
+            return _members;
         }
     }
 }

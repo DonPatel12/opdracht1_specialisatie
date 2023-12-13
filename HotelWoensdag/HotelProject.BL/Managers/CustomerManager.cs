@@ -29,7 +29,61 @@ namespace HotelProject.BL.Managers
                 throw new CustomerManagerException("GetAllCustomer",ex);
             }
         }
+        public void AddCustomer(Customer customer)
+        {
+            try
+            {
+                _customerRepository.AddCustomer(customer);
+            } catch (Exception ex)
+            {
+                throw new CustomerManagerException("AddCustomer", ex);
+            }
+        }
 
-        public 
+        public void DeleteCustomer(Customer customer)
+        {
+            try
+            {
+                _customerRepository.DeleteCustomer(customer);
+            } catch (Exception ex)
+            {
+                throw new CustomerManagerException("DeleteCustomer", ex);
+            }
+        }
+
+        public Customer GetCustomerById(int id)
+        {
+            try
+            {
+                return _customerRepository.GetCustomerById(id);
+            } catch (Exception ex)
+            {
+                throw new CustomerManagerException("GetCustomerById", ex);
+
+            }
+        }
+
+        public void UpdateCustomer(Customer customer)
+        {
+            try
+            {
+                _customerRepository.UpdateCustomer(customer);
+            } catch (Exception ex)
+            {
+                throw new CustomerManagerException("UpdateCustomer", ex);
+            }
+        }
+
+        public bool CustomerExists(int id)
+        {
+            try
+            {
+                return _customerRepository.CustomerExists(id);
+            } catch (Exception ex)
+            {
+                throw new CustomerManagerException("CustomerExists", ex);
+            }
+        }
+
     }
 }

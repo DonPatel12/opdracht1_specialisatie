@@ -1,8 +1,10 @@
 ﻿using HotelProject.BL.Managers;
 using HotelProject.BL.Model;
 using HotelProject.UI.CustomerWPF.Model;
+using HotelProject.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,47 +24,58 @@ namespace HotelProject.UI.CustomerWPF
     /// </summary>
     public partial class CustomerWindow : Window
     {
-        public CustomerUI customerUI;
-        private bool isUpdate;
-        public CustomerWindow(bool isUpdate,CustomerUI customerUI)
+        private CustomerManager customerManager;
+        private ObservableCollection<CustomerUI> customersUIs = new();
+        public CustomerWindow()
         {
             InitializeComponent();
-            this.customerUI = customerUI;
-            this.isUpdate = isUpdate;
-            if (customerUI != null )
+            customerManager = new CustomerManager(RepositoryFactory.CustomerRepository);
+            customersUIs = new ObservableCollection<CustomerUI>(customerManager.GetCustomers(null).Select(x => new CustomerUI(x.Id, x.Name, x.ContactInfo.Email, x.ContactInfo.Phone, x.ContactInfo.Address.ToString(), x.GetMembers().Count)));
+            CustomerDataGrid.ItemsSource = customersUIs;
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            CustomerDataGrid.ItemsSource = new ObservableCollection<CustomerUI>(customerManager.GetCustomers(SearchTextBox.Text).Select(x => new CustomerUI(x.Id, x.Name, x.ContactInfo.Email, x.ContactInfo.Phone, x.ContactInfo.Address.ToString(), x.GetMembers().Count)));
+        }
+
+        private void MenuItemAddCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            AddCustomerWindow w = new(false, null);
+            if (w.ShowDialog() == true)
+                customersUIs.Add(w.customerUI);
+            customerManager = new CustomerManager(RepositoryFactory.CustomerRepository);
+            customersUIs = new ObservableCollection<CustomerUI>(customerManager.GetCustomers(null).Select(x => new CustomerUI(x.Id, x.Name, x.ContactInfo.Email, x.ContactInfo.Phone, x.ContactInfo.Address.ToString(), x.GetMembers().Count)));
+            CustomerDataGrid.ItemsSource = customersUIs;
+        }
+
+        private void MenuItemDeleteCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (CustomerDataGrid.SelectedItem == null)
             {
-                IdTextBox.Text = customerUI.Id.ToString();
-                NameTextBox.Text = customerUI.Name;
-                EmailTextBox.Text = customerUI.Email;
-                PhoneTextBox.Text = customerUI.Phone;
-                //CityTextBox.Text=customerUI.address
+                MessageBox.Show("Customer not selected", "Delete");
+            } else
+            {
+                CustomerUI selectedCustomerUI = (CustomerUI)CustomerDataGrid.SelectedItem;
+                Customer customer = customerManager.GetCustomerById((int)selectedCustomerUI.Id);
+                customerManager.DeleteCustomer(customer);
+                customersUIs.Remove(selectedCustomerUI);
             }
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
+        private void MenuItemUpdateCustomer_Click(object sender, RoutedEventArgs e)
         {
-            if (isUpdate)
-            {
-                customerUI.Name = NameTextBox.Text;
-                customerUI.Email = EmailTextBox.Text;
-                customerUI.Phone = PhoneTextBox.Text;
-                //TODO customermanager.Update()
-                //customerManager.UpdateCustomer(customerUI);
-            }
+            if (CustomerDataGrid.SelectedItem == null) MessageBox.Show("Customer not selected", "Update");
             else
             {
-                Customer c = new (NameTextBox.Text, new ContactInfo(EmailTextBox.Text, PhoneTextBox.Text, new Address(CityTextBox.Text, ZipTextBox.Text, HouseNumberTextBox.Text, StreetTextBox.Text)));
-                //write customer
-                c.Id = 100;
-                //TODO id from DB
-                customerUI = new (c.Id, c.Name, c.ContactInfo.Email, c.ContactInfo.Phone, c.ContactInfo.Address.ToString(), c.GetMembers().Count);
+                AddCustomerWindow w = new(true, (CustomerUI)CustomerDataGrid.SelectedItem);
+                w.ShowDialog();
             }
-            DialogResult = true;
-            Close();
         }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
+            StartWindow s = new StartWindow();
+            s.Show();
             Close();
         }
     }
