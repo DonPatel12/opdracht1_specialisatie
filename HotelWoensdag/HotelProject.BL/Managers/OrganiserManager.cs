@@ -78,5 +78,7 @@ namespace HotelProject.BL.Managers
 
 
         }
+
+
     }
 }

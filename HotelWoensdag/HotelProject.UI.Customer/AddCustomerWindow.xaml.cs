@@ -1,6 +1,7 @@
 ﻿using HotelProject.BL.Managers;
 using HotelProject.BL.Model;
 using HotelProject.UI.CustomerWPF.Model;
+using HotelProject.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace HotelProject.UI.CustomerWPF
         public AddCustomerWindow(bool isUpdate, CustomerUI customerUI)
         {
             InitializeComponent();
+            customerManager = new CustomerManager(RepositoryFactory.CustomerRepository);
             this.customerUI = customerUI;
             this.isUpdate = isUpdate;
             if (customerUI != null)
@@ -47,10 +49,11 @@ namespace HotelProject.UI.CustomerWPF
         {
             if (isUpdate)
             {
+                customerUI.Id = int.Parse(IdTextBox.Text);
                 customerUI.Name = NameTextBox.Text;
                 customerUI.Email = EmailTextBox.Text;
                 customerUI.Phone = PhoneTextBox.Text;
-                var c = customerManager.GetCustomerById((int)customerUI.Id);
+                Customer c = customerManager.GetCustomerById((int)customerUI.Id);
 
                 Address a = new Address(c.ContactInfo.Address.Municipality, c.ContactInfo.Address.ZipCode, c.ContactInfo.Address.HouseNumber, c.ContactInfo.Address.Street);
 

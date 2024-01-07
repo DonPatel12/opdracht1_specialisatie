@@ -11,8 +11,8 @@ namespace HotelProject.BL.Interfaces
     {
         List<Organiser> GetOrganisers(string filter);
         void AddOrganiser(Organiser organiser);
+        void UpdateOrganiser(Organiser organiser);
         void DeleteOrganiser(Organiser organiser);
         Organiser GetOrganiserById(int id);
-        void UpdateOrganiser(Organiser organiser);
     }
 }

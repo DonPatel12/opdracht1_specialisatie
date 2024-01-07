@@ -22,15 +22,15 @@ namespace HotelProject.DL.Repositories
         {
             try
             {
-                string SQL = "INSERT INTO Organiser(name,email,phone,address) output INSERTED.id VALUES(@name,@email,@phone,@address)";
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                string sql = "INSERT INTO Organizer(name,email,phone,address) output INSERTED.id VALUES(@name,@email,@phone,@address)";
+                using (SqlConnection conn = new (connectionString))
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     conn.Open();
                     SqlTransaction transaction = conn.BeginTransaction();
                     try
                     {
-                        cmd.CommandText = SQL;
+                        cmd.CommandText = sql;
                         cmd.Transaction = transaction;
                         cmd.Parameters.AddWithValue("@name", organiser.Name);
                         cmd.Parameters.AddWithValue("@email", organiser.ContactInfo.Email);
@@ -51,8 +51,8 @@ namespace HotelProject.DL.Repositories
 
         public void DeleteOrganiser(Organiser organiser)
         {
-            string sql = "DELETE FROM Organiser WHERE id=@id";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            string sql = "DELETE FROM Organizer WHERE id=@id";
+            using (SqlConnection conn = new (connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 try
@@ -70,8 +70,8 @@ namespace HotelProject.DL.Repositories
 
         public Organiser GetOrganiserById(int id)
         {
-            string sql = "SELECT * FROM Organiser WHERE id=@id";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            string sql = "SELECT * FROM Organizer WHERE id=@id";
+            using (SqlConnection conn = new (connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 try
@@ -81,7 +81,7 @@ namespace HotelProject.DL.Repositories
                     cmd.Parameters.AddWithValue("@id", id);
                     IDataReader dr = cmd.ExecuteReader();
                     dr.Read();
-                    Organiser o = new Organiser((string)dr["name"], (int)dr["id"], new ContactInfo((string)dr["email"], (string)dr["phone"], new Address((string)dr["address"])));
+                    Organiser o = new ((int)dr["id"], (string)dr["name"], new ((string)dr["email"], (string)dr["phone"], new ((string)dr["address"])));
                     dr.Close();
                     return o;
                 } catch (Exception ex)
@@ -95,9 +95,9 @@ namespace HotelProject.DL.Repositories
         {
             try
             {
-                List<Organiser> Organisers = new List<Organiser>();
-                string sql = "SELECT * FROM Organiser";
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                List<Organiser> Organisers = new ();
+                string sql = "SELECT * FROM Organizer";
+                using (SqlConnection conn = new (connectionString))
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     conn.Open();
@@ -105,13 +105,13 @@ namespace HotelProject.DL.Repositories
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        Organiser organiser = new Organiser(
-                            (string)reader["name"],
+                        Organiser organiser = new (
                             (int)reader["id"],
-                            new ContactInfo(
+                            (string)reader["name"],
+                            new (
                                 (string)reader["email"],
                                 (string)reader["phone"],
-                                new Address((string)reader["address"])
+                                new ((string)reader["address"])
                             )
                         );
                         Organisers.Add(organiser);
@@ -126,7 +126,7 @@ namespace HotelProject.DL.Repositories
 
         public void UpdateOrganiser(Organiser organiser)
         {
-            string sql = "UPDATE Organiser SET name=@name, email=@email, phone=@phone WHERE id=@id";
+            string sql = "UPDATE Organizer SET name=@name, email=@email, phone=@phone WHERE id=@id";
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
             {

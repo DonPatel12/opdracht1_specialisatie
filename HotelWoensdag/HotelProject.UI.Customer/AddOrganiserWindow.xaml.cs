@@ -56,7 +56,7 @@ namespace HotelProject.UI.CustomerWPF
 
                 ContactInfo contactinfo = new ContactInfo(organiserUI.Email, organiserUI.Phone, a);
 
-                Organiser organiser = new Organiser(organiserUI.Name, (int)organiserUI.Id, contactinfo);
+                Organiser organiser = new Organiser( (int)organiserUI.Id, organiserUI.Name, contactinfo);
 
                 organiserManager.UpdateOrganiser(organiser);
             } else

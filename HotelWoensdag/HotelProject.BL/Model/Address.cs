@@ -19,10 +19,10 @@ namespace HotelProject.BL.Model
         public Address(string addressLine)
         {
             string[] parts = addressLine.Split(new char[] { '|' });
-            _houseNumber = parts[3];
-            _street = parts[1];
-            _municipality = parts[0];
-            _zipCode = parts[2];
+            HouseNumber = parts[3];
+            Street = parts[2];
+            ZipCode = parts[1];
+            Municipality = parts[0];
         }
 
         private string _municipality;

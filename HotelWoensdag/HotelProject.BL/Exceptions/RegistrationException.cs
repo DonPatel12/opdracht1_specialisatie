@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotelProject.BL.Exceptions
 {
-    internal class RegistrationException : Exception
+    public class RegistrationException : Exception
     {
         public RegistrationException(string? message) : base(message)
         {

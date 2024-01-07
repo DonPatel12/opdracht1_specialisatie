@@ -1,4 +1,5 @@
 ﻿using HotelProject.BL.Managers;
+using HotelProject.BL.Model;
 using HotelProject.UI.CustomerWPF.Model;
 using HotelProject.Util;
 using System;
@@ -24,27 +25,61 @@ namespace HotelProject.UI.CustomerWPF
     public partial class ActivityWindow : Window
     {
         private ActivityManager activityManager;
-        private ObservableCollection<ActivityUI> activitiesUIs = new ObservableCollection<ActivityUI>();
-        private OrganiserUI organiserUI;
-        public ActivityWindow(OrganiserUI organiserUI)
+        private ObservableCollection<ActivityUI> activityUIs = new ObservableCollection<ActivityUI>();
+        private CustomerUI customerUI;
+        public ActivityWindow(CustomerUI customerUI)
         {
             InitializeComponent();
             activityManager = new ActivityManager(RepositoryFactory.ActivityRepository);
-            this.organiserUI = organiserUI;
+            this.customerUI = customerUI;
 
-            if (organiserUI == null)
+            InitializeActivitiesDataGrid();
+        }
+
+        private void InitializeActivitiesDataGrid()
+        {
+            var activities = activityManager.GetAllActivities()
+                .Select(x => new ActivityUI(x.Id, x.Name, x.Description, x.EventDateTime, x.Duration, x.Location, x.NumberOfSpots, x.PriceInfo.AdultCost, x.PriceInfo.ChildCost, x.PriceInfo.AdultAge, x.PriceInfo.Discount));
+
+            
+            List<ActivityUI> activityF = new List<ActivityUI>();
+
+            //// Filter out activities that are in the past
+            foreach (ActivityUI activity in activities)
             {
-                activitiesUIs = new ObservableCollection<ActivityUI>(activityManager.GetAllActivities().Select(x => new ActivityUI(x.Id, x.Name, x.Description,  x.EventDateTime, x.Location, x.NumberOfSpots, x.PriceInfo.AdultCost, x.PriceInfo.ChildCost, x.PriceInfo.Discount, x.OrganiserId)));
-            } else
-            {
-                activitiesUIs = new ObservableCollection<ActivityUI>(activityManager.GetAllActivities().Where(x => x.OrganiserId == organiserUI.Id).Select(x => new ActivityUI(x.Id, x.Name, x.Description, x.EventDateTime, x.Location, x.NumberOfSpots, x.PriceInfo.AdultCost, x.PriceInfo.ChildCost, x.PriceInfo.Discount, x.OrganiserId)));
+                if (activity.Date >= DateTime.Now)
+                {
+                    activityF.Add(activity);
+                }
             }
 
-            ActivitiesDataGrid.ItemsSource = activitiesUIs;
+            ActivityDataGrid.ItemsSource = new ObservableCollection<ActivityUI>(activityF);
         }
-        
 
-        
+        private void OpenRegistrationWindow()
+        {
+            var activityUI = (ActivityUI)ActivityDataGrid.SelectedItem;
+            var registrateWindow = new RegistrationWindow(activityUI, customerUI);
+            registrateWindow.Show();
+            Close();
+        }
+
+        private void RegistrationCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (ActivityDataGrid.SelectedItem is null)
+            {
+                MessageBox.Show("Activity not selected");
+            } else
+            {
+                if (customerUI is null)
+                {
+                    MessageBox.Show("Customer not selected", "RegistrateCustomer");
+                } else
+                {
+                    OpenRegistrationWindow();
+                }
+            }
+        }
 
         //private void SearchButton_Click(object sender, RoutedEventArgs e)
         //{
@@ -53,7 +88,7 @@ namespace HotelProject.UI.CustomerWPF
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
-            StartWindow s = new StartWindow();
+            StartWindow s = new ();
             s.Show();
             Close();
         }

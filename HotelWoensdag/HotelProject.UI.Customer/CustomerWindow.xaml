@@ -6,28 +6,37 @@
         xmlns:local="clr-namespace:HotelProject.UI.CustomerWPF"
         mc:Ignorable="d"
         Title="CustomerWindow" Height="450" Width="800">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <!-- Added a new row for the Home Button -->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Row="0" Grid.Column="0" Name="SearchTextBox" Margin="5"/>
-        <Button Grid.Row="0" Grid.Column="1" Name="SearchButton" Margin="5" Content="Search" Click="SearchButton_Click"/>
-        <DataGrid Name="CustomerDataGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" IsReadOnly="True" >
+
+        <!-- Search TextBox -->
+        <TextBox Grid.Row="0" Grid.Column="0" Name="SearchTextBox" Margin="5" />
+
+        <!-- Search Button -->
+        <Button Grid.Row="0" Grid.Column="1" Name="SearchButton" Margin="5" Content="Search" Click="SearchButton_Click" />
+
+        <!-- Customer DataGrid -->
+        <DataGrid Name="CustomerDataGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" IsReadOnly="True">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Add" Click="MenuItemAddCustomer_Click"></MenuItem>
-                    <MenuItem Header="Delete" Click="MenuItemDeleteCustomer_Click"></MenuItem>
-                    <MenuItem Header="Update" Click="MenuItemUpdateCustomer_Click"></MenuItem>
+                    <MenuItem Header="Add" Click="MenuItemAddCustomer_Click" />
+                    <MenuItem Header="Delete" Click="MenuItemDeleteCustomer_Click" />
+                    <MenuItem Header="Update" Click="MenuItemUpdateCustomer_Click" />
+                    <MenuItem Header="AddtoActivity" Click="MenuItemAddtoActivity_Click" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <Button Grid.Row="1" Grid.Column="1" Name="HomeButton" Margin="190,375,5,5" Content="Home" Click="HomeButton_Click" />
 
+        <!-- Home Button - Now in its own row at the bottom -->
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Name="HomeButton" Margin="5" Width="100" Height="30" Content="Home" Click="HomeButton_Click" />
     </Grid>
 </Window>

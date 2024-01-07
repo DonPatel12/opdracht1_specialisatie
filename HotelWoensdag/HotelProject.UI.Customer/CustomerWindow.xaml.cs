@@ -25,7 +25,7 @@ namespace HotelProject.UI.CustomerWPF
     public partial class CustomerWindow : Window
     {
         private CustomerManager customerManager;
-        private ObservableCollection<CustomerUI> customersUIs = new();
+        private ObservableCollection<CustomerUI> customersUIs;
         public CustomerWindow()
         {
             InitializeComponent();
@@ -45,8 +45,8 @@ namespace HotelProject.UI.CustomerWPF
             if (w.ShowDialog() == true)
                 customersUIs.Add(w.customerUI);
             customerManager = new CustomerManager(RepositoryFactory.CustomerRepository);
-            customersUIs = new ObservableCollection<CustomerUI>(customerManager.GetCustomers(null).Select(x => new CustomerUI(x.Id, x.Name, x.ContactInfo.Email, x.ContactInfo.Phone, x.ContactInfo.Address.ToString(), x.GetMembers().Count)));
-            CustomerDataGrid.ItemsSource = customersUIs;
+            CustomerDataGrid.ItemsSource = new ObservableCollection<CustomerUI>(customerManager.GetCustomers(null).Select(x => new CustomerUI(x.Id, x.Name, x.ContactInfo.Email, x.ContactInfo.Phone, x.ContactInfo.Address.ToString(), x.GetMembers().Count)));
+
         }
 
         private void MenuItemDeleteCustomer_Click(object sender, RoutedEventArgs e)
@@ -77,6 +77,20 @@ namespace HotelProject.UI.CustomerWPF
             StartWindow s = new StartWindow();
             s.Show();
             Close();
+        }
+
+        private void MenuItemAddtoActivity_Click(object sender, EventArgs e)
+        {
+            if (CustomerDataGrid.SelectedItem == null)
+            {
+                MessageBox.Show("Customer not selected", "ViewActivity - null");
+            } else
+            {
+                CustomerUI selectedCustomer = (CustomerUI)CustomerDataGrid.SelectedItem;
+                ActivityWindow w = new (selectedCustomer);
+                w.Show();
+                Close();
+            }
         }
     }
 }

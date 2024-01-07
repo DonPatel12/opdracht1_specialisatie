@@ -11,6 +11,10 @@ namespace HotelProject.BL.Interfaces
     {
         List<Activity> GetAllActivities();
         void AddActivity(Activity activity);
+        void UpdateActivity(Activity activity);
         void DeleteActivity(Activity activity);
+
+        Activity GetActivityById(int id);
+
     }
 }

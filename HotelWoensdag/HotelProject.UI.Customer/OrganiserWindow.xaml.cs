@@ -45,8 +45,8 @@ namespace HotelProject.UI.CustomerWPF
             {
                 organiserUIs.Add(w.organiserUI);
                 organiserManager = new OrganiserManager(RepositoryFactory.OrganiserRepository);
-                organiserUIs = new ObservableCollection<OrganiserUI>(organiserManager.GetOrganisers(null).Select(x => new OrganiserUI(x.Id, x.Name, x.ContactInfo.Email, x.ContactInfo.Phone, x.ContactInfo.Address.ToString())));
-                OrganiserDataGrid.ItemsSource = organiserUIs;
+                OrganiserDataGrid.ItemsSource = new ObservableCollection<OrganiserUI>(organiserManager.GetOrganisers(null).Select(x => new OrganiserUI(x.Id, x.Name, x.ContactInfo.Email, x.ContactInfo.Phone, x.ContactInfo.Address.ToString())));
+                
             }
         }
 
@@ -90,9 +90,9 @@ namespace HotelProject.UI.CustomerWPF
             if (OrganiserDataGrid.SelectedItem == null) MessageBox.Show("Organiser not selected", "ViewActivities");
             else
             {
-                OrganiserUI selectedOrganiser = (OrganiserUI)OrganiserDataGrid.SelectedItem;
+                //OrganiserUI selectedOrganiser = (OrganiserUI)OrganiserDataGrid.SelectedItem;
 
-                ActivityWindow w = new ActivityWindow(selectedOrganiser);
+                ActivityWindow w = new (null);
 
                 w.ShowDialog();
             }
@@ -100,7 +100,7 @@ namespace HotelProject.UI.CustomerWPF
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
-            StartWindow s = new StartWindow();
+            StartWindow s = new ();
             s.Show();
             Close();
         }

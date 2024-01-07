@@ -11,10 +11,10 @@ namespace HotelProject.BL.Model
     {
         public PriceInfo(decimal adultCost, decimal childCost, decimal discount, int adultAge)
         {
-            _adultCost = adultCost;
-            _childCost = childCost;
-            _discount = discount;
-            _adultAge = adultAge;
+            AdultCost = adultCost;
+            ChildCost = childCost;
+            Discount = discount;
+            AdultAge = adultAge;
         }
 
         private decimal _adultCost;
@@ -48,6 +48,11 @@ namespace HotelProject.BL.Model
                     totalCost += ChildCost;
                 }
             }
+
+
+            decimal discount = totalCost  * Discount;
+                    totalCost -= discount;
+
             return totalCost;
         }
     }

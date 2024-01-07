@@ -12,17 +12,17 @@ namespace HotelProject.BL.Model
         public ContactInfo ContactInfo { get { return _contactInfo; } set { if (value == null) throw new CustomerException("contactinfo null"); _contactInfo = value; } }
         private List<Member> _members=new ();
 
-        public Customer(string name, int id, ContactInfo contactInfo)
+        public Customer(string name, int id, ContactInfo contactInfo) : this(name, contactInfo)
         {
-            _name = name;
-            _id = id;
-            _contactInfo = contactInfo;
+
+            Id = id;
+
         }
 
         public Customer(string name, ContactInfo contactInfo)
         {
-            _name = name;
-            _contactInfo = contactInfo;
+            Name = name;
+            ContactInfo = contactInfo;
         }
 
         public IReadOnlyList<Member> GetMembers()

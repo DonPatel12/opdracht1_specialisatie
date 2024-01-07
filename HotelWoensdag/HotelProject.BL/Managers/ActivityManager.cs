@@ -55,5 +55,29 @@ namespace HotelProject.BL.Managers
 
 
         }
+
+        public Activity GetActivityById(int id)
+        {
+            try
+            {
+                return _activityRepository.GetActivityById(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ActivityException("Error getting activity by id", ex);
+            }
+        }
+
+        public void UpdateActivity(Activity activity)
+        {
+            try
+            {
+                _activityRepository.UpdateActivity(activity);
+            }
+            catch (Exception ex)
+            {
+                throw new ActivityException("Error updating activity", ex);
+            }
+        }
     }
 }

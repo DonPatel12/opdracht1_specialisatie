@@ -10,28 +10,30 @@ namespace HotelProject.BL.Model
     public class Activity
     {
 
-        public Activity(int id, string name, string description, DateTime eventDateTime, string location, int numberOfSpots, PriceInfo priceInfo, int organiserId)
+        
+
+        public Activity(string name, string description, DateTime eventDateTime, int duration, string location, int numberOfSpots, PriceInfo priceInfo)
+        {
+            Name = name;
+            Description = description;
+            EventDateTime = eventDateTime;
+            Duration = duration;
+            Location = location;
+            NumberOfSpots = numberOfSpots;
+            PriceInfo = priceInfo;
+        }
+
+        public Activity(int id, string name, string description, DateTime eventDateTime, int duration, string location, int numberOfSpots, PriceInfo priceInfo) 
         {
             Id = id;
             Name = name;
             Description = description;
             EventDateTime = eventDateTime;
+            Duration = duration;
             Location = location;
             NumberOfSpots = numberOfSpots;
             PriceInfo = priceInfo;
-            
-            OrganiserId = organiserId;
-        }
 
-        public Activity(string name, string description, DateTime eventDateTime, string location, int numberOfSpots, PriceInfo priceInfo, int organiserId)
-        {
-            Name = name;
-            Description = description;
-            EventDateTime = eventDateTime;
-            Location = location;
-            NumberOfSpots = numberOfSpots;
-            PriceInfo = priceInfo;
-            OrganiserId = organiserId;
         }
 
         private int _id;
@@ -90,6 +92,25 @@ namespace HotelProject.BL.Model
             }
         }
 
+        private int _duration;
+        public int Duration
+        {
+            get
+            {
+                return _duration;
+            }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ActivityException("Duration is invalid!");
+                } else
+                {
+                    _duration = value;
+                }
+            }
+        }
+
         private string _location;
         public string Location
         {
@@ -99,7 +120,7 @@ namespace HotelProject.BL.Model
             }
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     throw new ActivityException("Location is invalid!");
                 } else
@@ -138,74 +159,29 @@ namespace HotelProject.BL.Model
             }
         }
 
-        //private List<Customer> _participants;
-        //public List<Customer> Participants
+
+
+
+        //private int _organiserId;
+        //public int OrganiserId
         //{
-        //    get => _participants;
+        //    get => _organiserId;
         //    set
         //    {
-        //        if (value == null)
+        //        if (value <= 0)
         //        {
-        //            throw new ActivityException("Participants is null!");
+        //            throw new ActivityException("Organiser id is invalid!");
         //        }
-        //        _participants = value;
+        //        _organiserId = value;
         //    }
         //}
-
-        private int _organiserId;
-        public int OrganiserId
-        {
-            get => _organiserId;
-            set
-            {
-                if (value <= 0)
-                {
-                    throw new ActivityException("Organiser id is invalid!");
-                }
-                _organiserId = value;
-            }
-        }
 
         public decimal Cost(List<Member> members)
         {
             return PriceInfo.Cost(members);
         }
 
-        
-        //public Activity(string name, string description, DateTime eventDateTime, int maxParticipants, int price)
-        //{
 
-        //    Name = name;
-        //    Description = description;
-        //    EventDateTime = eventDateTime;
-        //    MaxParticipants = maxParticipants;
-        //    Price = price;
-        //    Participants = new List<Customer>();
-        //}
 
-        //public void AddParticipant(Customer customer)
-        //{
-        //    if (customer == null)
-        //        throw new ActivityException(nameof(customer));
-
-        //    if (Participants.Count >= MaxParticipants)
-        //        throw new ActivityException("Cannot add more participants, activity is full.");
-
-        //    Participants.Add(customer);
-        //}
-
-        //public bool IsFull()
-        //{
-        //    return Participants.Count >= MaxParticipants;
-        //}
-
-        
-        ////public void RemoveParticipant(Member member)
-        ////{
-        ////    if (member == null)
-        ////        throw new ActivityException(nameof(member));
-        ////
-        ////    Participants.Remove(member);
-        ////}
     }
 }

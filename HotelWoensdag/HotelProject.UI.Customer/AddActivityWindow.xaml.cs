@@ -44,7 +44,10 @@ namespace HotelProject.UI.CustomerWPF
                  !Int32.TryParse(DiscountTextBox.Text, out int discount) ||
                  !Int32.TryParse(AdultAgeTextBox.Text, out int adultAge) ||
                  !Int32.TryParse(AvailableSpotsTextBox.Text, out int availableSpots) ||
-                 !DateTime.TryParse(DateTextBox.Text, out DateTime date))
+                 !DateTime.TryParse(DateTextBox.Text, out DateTime date) ||
+                    String.IsNullOrWhiteSpace(NameTextBox.Text) ||
+                    String.IsNullOrWhiteSpace(DescriptionTextBox.Text) ||
+                    !Int32.TryParse(DurationTextBox.Text, out int duration))
             {
                 MessageBox.Show("Please enter valid values in all fields.");
                 return;
@@ -54,7 +57,7 @@ namespace HotelProject.UI.CustomerWPF
 
             PriceInfo priceInfo = new PriceInfo(adultCost, childCost, discount, adultAge);
 
-            Activity activity = new Activity(NameTextBox.Text, DescriptionTextBox.Text, date, LocationTextBox.Text, availableSpots, priceInfo, organiserId);
+            Activity activity = new Activity(NameTextBox.Text, DescriptionTextBox.Text, date, duration, LocationTextBox.Text, availableSpots, priceInfo);
 
             try
             {
